@@ -7,7 +7,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui concurrent widgets xml
+QT += core gui concurrent widgets xml
 
 TARGET = stereo_vision_toolkit
 TEMPLATE = app vcapp
@@ -97,7 +97,10 @@ CONFIG(debug, debug|release) {
     LIBS += -L"$$_PRO_FILE_PWD_/3rd_party/opencv/lib"
     LIBS += -L"$$_PRO_FILE_PWD_/3rd_party/hidapi/lib/debug" -lhidapi
     LIBS += -lpcl_visualization_debug -lpcl_io_debug -lpcl_common_debug -lpcl_filters_debug
-    LIBS += -lopencv_ximgproc341d -lopencv_core341d -lopencv_highgui341d -lopencv_calib3d341d -lopencv_videoio341d -lopencv_imgproc341d -lopencv_imgcodecs341d -lopencv_cudastereo341d -lopencv_cudawarping341d
+    LIBS += -lopencv_ximgproc341d -lopencv_core341d -lopencv_highgui341d -lopencv_calib3d341d -lopencv_videoio341d -lopencv_imgproc341d -lopencv_imgcodecs341d
+    #ifdef CUDA
+    LIBS += -lopencv_cudastereo341d -lopencv_cudawarping341d
+    #endif
 }else {
     message("Release mode")
     LIBS += -L"$$_PRO_FILE_PWD_/3rd_party/pcl/lib"
@@ -105,7 +108,10 @@ CONFIG(debug, debug|release) {
     LIBS += -L"$$_PRO_FILE_PWD_/3rd_party/opencv/lib"
     LIBS += -L"$$_PRO_FILE_PWD_/3rd_party/hidapi/lib/release" -lhidapi
     LIBS += -lpcl_visualization_release -lpcl_io_release -lpcl_common_release -lpcl_filters_release
-    LIBS += -lopencv_ximgproc341 -lopencv_core341 -lopencv_highgui341 -lopencv_calib3d341 -lopencv_videoio341 -lopencv_imgproc341 -lopencv_imgcodecs341 -lopencv_cudastereo341 -lopencv_cudawarping341
+    LIBS += -lopencv_ximgproc341 -lopencv_core341 -lopencv_highgui341 -lopencv_calib3d341 -lopencv_videoio341 -lopencv_imgproc341 -lopencv_imgcodecs341
+    #ifdef CUDA
+    LIBS += -lopencv_cudastereo341 -lopencv_cudawarping341
+    #endif
 }
 
 LIBS += -lvtkCommonCore-7.0 -lvtkCommonDataModel-7.0 -lvtkGUISupportQt-7.0 -lvtkViewsQt-7.0 -lvtkViewsCore-7.0 -lvtkRenderingQt-7.0  -lvtkCommonMath-7.0 -lvtkRenderingCore-7.0 -lvtkIOCore-7.0

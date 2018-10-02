@@ -6,10 +6,13 @@
 #include "abstractstereocamera.h"
 
 AbstractStereoCamera::AbstractStereoCamera(QObject *parent) : QObject(parent) {
+
+#ifdef CUDA
   if (cv::cuda::getCudaEnabledDeviceCount() > 0) {
     has_cuda = true;
     emit haveCuda();
   }
+#endif
 
   ptCloud = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
 }
@@ -319,6 +322,7 @@ bool AbstractStereoCamera::loadCalibration(QString left_cal, QString right_cal,
 }
 
 void AbstractStereoCamera::rectifyImages(void) {
+  #ifdef CUDA
   if (has_cuda) {
     cv::cuda::GpuMat d_left, d_right, d_left_remap, d_right_remap;
 
@@ -341,6 +345,7 @@ void AbstractStereoCamera::rectifyImages(void) {
     d_right_remap.download(right_remapped);
 
   } else {
+  #endif
     QFuture<void> res_l =
         QtConcurrent::run(this, &AbstractStereoCamera::remap_parallel, left_raw,
                           std::ref(left_remapped), rectmapx_l, rectmapy_l);
@@ -350,7 +355,9 @@ void AbstractStereoCamera::rectifyImages(void) {
 
     res_l.waitForFinished();
     res_r.waitForFinished();
+  #ifdef CUDA
   }
+  #endif
 }
 
 void AbstractStereoCamera::remap_parallel(cv::Mat src, cv::Mat &dst,

@@ -18,9 +18,10 @@
 #include<memory>
 
 #include <opencv2/opencv.hpp>
+#ifdef CUDA
 #include <opencv2/cudastereo.hpp>
 #include <opencv2/cudawarping.hpp>
-
+#endif
 // Point Cloud Library
 #define _MATH_DEFINES_DEFINED
 #include <pcl/point_cloud.h>
@@ -65,10 +66,10 @@ class AbstractStereoCamera : public QObject {
 
     //! Emitted when a camera has captured an image, typically used in sub-classes
     void captured();
-
+#ifdef CUDA
     //! Emitted if the host system is found to have a CUDA-capable graphics card installed
     void haveCuda();
-
+#endif
     //! Indicates the internal temperature of the camera in Celcius
     void temperature_C(double);
 
