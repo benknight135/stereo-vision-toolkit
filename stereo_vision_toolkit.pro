@@ -44,7 +44,9 @@ SOURCES += main.cpp\
     matcherwidget.cpp \
     matcherwidgetopencvsgbm.cpp \
     disparityviewer.cpp \
-    paramfile.cpp
+    paramfile.cpp \
+    cameradisplaywidget.cpp \
+    src/stereocameraphobos.cpp
 
 HEADERS  += mainwindow.h \
     calibrationdialog.h \
@@ -64,7 +66,9 @@ HEADERS  += mainwindow.h \
     matcherwidget.h \
     matcherwidgetopencvsgbm.h \
     disparityviewer.h \
-    paramfile.h
+    paramfile.h \
+    cameradisplaywidget.h \
+    src/stereocameraphobos.h
 
 FORMS    += mainwindow.ui \
     calibrationdialog.ui \
@@ -72,7 +76,8 @@ FORMS    += mainwindow.ui \
     calibratefromimagesdialog.ui \
     matcherwidgetopencvblock.ui \
     matcherwidgetopencvsgbm.ui \
-    disparityviewer.ui
+    disparityviewer.ui \
+    cameradisplaywidget.ui
 
 # For building in a single folder
 CONFIG(debug, debug|release) {

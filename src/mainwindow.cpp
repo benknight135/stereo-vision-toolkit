@@ -31,6 +31,12 @@ MainWindow::MainWindow(QWidget* parent)
   save_directory = parameters->get_string("saveDir");
   calibration_directory = parameters->get_string("calDir");
 
+  left_view = new CameraDisplayWidget(this);
+  right_view = new CameraDisplayWidget(this);
+
+  ui->stereoViewLayout->addWidget(left_view);
+  ui->stereoViewLayout->addWidget(right_view);
+
   controlsInit();
   statusBarInit();
   stereoCameraLoad();
@@ -155,7 +161,10 @@ void MainWindow::stereoCameraInitConnections(void) {
 
   connect(ui->exposureSpinBox, SIGNAL(valueChanged(double)), stereo_cam,
           SLOT(setExposure(double)));
-  connect(stereo_cam, SIGNAL(acquired()), this, SLOT(updateDisplay()));
+  connect(stereo_cam, SIGNAL(stereopair_processed()), this, SLOT(updateDisplay()));
+  connect(stereo_cam, SIGNAL(update_size(int, int, int)), left_view, SLOT(setSize(int, int, int)));
+  connect(stereo_cam, SIGNAL(update_size(int, int, int)), right_view, SLOT(setSize(int, int, int)));
+
   connect(stereo_cam, SIGNAL(fps(qint64)), this, SLOT(updateFPS(qint64)));
   connect(stereo_cam, SIGNAL(framecount(qint64)), this,
           SLOT(updateFrameCount(qint64)));
@@ -299,6 +308,9 @@ void MainWindow::stereoCameraInit() {
     disparity_view->setCalibration(stereo_cam->Q, 60e-3, 4.3e-3);
     disparity_view->updatePixmapRange();
 
+    left_view->setSize(stereo_cam->getWidth(), stereo_cam->getHeight(), 1);
+    right_view->setSize(stereo_cam->getWidth(), stereo_cam->getHeight(), 1);
+
     QTimer::singleShot(1, stereo_cam, SLOT(freerun()));
     ui->statusBar->showMessage("Freerunning.");
   }
@@ -438,7 +450,7 @@ void MainWindow::startCalibration(void) {
   /* Connect calibration */
   calibrator = new StereoCalibrate(this, stereo_cam);
   calibrator->setPattern(cv::Size(9, 6), 25e-3);
-  calibrator->setDisplays(ui->left_image_view, ui->right_image_view);
+  calibrator->setDisplays(left_view->getImageDisplay(), right_view->getImageDisplay());
   calibrator->loadBoardPoses("./calibration_template_a4.ini");
 
   calibration_dialog = new CalibrationDialog(this, calibrator);
@@ -578,27 +590,19 @@ void MainWindow::displaySaved(QString fname) {
 }
 
 void MainWindow::updateDisplay(void) {
-  cv::Mat left, right;
+    cv::Mat left, right;
 
-  stereo_cam->getLeftImage(left);
-  stereo_cam->getRightImage(right);
+      stereo_cam->getLeftImage(left);
+      stereo_cam->getRightImage(right);
 
-  QImage im_left(left.data, left.cols, left.rows, QImage::Format_Indexed8);
-  pmap_left = QPixmap::fromImage(im_left);
+      left_view->updateView(left.data);
+      right_view->updateView(right.data);
 
-  if(pmap_left.isNull()) return;
+      QImage im_left(left.data, left.cols, left.rows, QImage::Format_Indexed8);
+      pmap_left = QPixmap::fromImage(im_left);
 
-  ui->left_image_view->setPixmap(
-      pmap_left.scaled(ui->left_image_view->size(), Qt::KeepAspectRatio));
-  ui->left_image_view_stereo->setPixmap(pmap_left.scaled(
+      ui->left_image_view_stereo->setPixmap(pmap_left.scaled(
       ui->left_image_view_stereo->size(), Qt::KeepAspectRatio));
-
-  QImage im_right(right.data, right.cols, right.rows, QImage::Format_Indexed8);
-  pmap_right = QPixmap::fromImage(im_right);
-
-  if(pmap_right.isNull()) return;
-  ui->right_image_view->setPixmap(
-      pmap_right.scaled(ui->right_image_view->size(), Qt::KeepAspectRatio));
 }
 
 void MainWindow::setSaveDirectory(QString dir) {

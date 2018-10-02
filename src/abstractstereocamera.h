@@ -22,8 +22,8 @@
 #include <opencv2/cudastereo.hpp>
 #include <opencv2/cudawarping.hpp>
 #endif
+
 // Point Cloud Library
-#define _MATH_DEFINES_DEFINED
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl/io/ply_io.h>
@@ -66,6 +66,12 @@ class AbstractStereoCamera : public QObject {
 
     //! Emitted when a camera has captured an image, typically used in sub-classes
     void captured();
+
+    void stereopair_processed();
+
+    //! Emitted when the frame size of a camera changes
+    void update_size(int width, int height, int bitdepth);
+
 #ifdef CUDA
     //! Emitted if the host system is found to have a CUDA-capable graphics card installed
     void haveCuda();
@@ -73,8 +79,12 @@ class AbstractStereoCamera : public QObject {
     //! Indicates the internal temperature of the camera in Celcius
     void temperature_C(double);
 
+    void stereo_grab();
+
+    void stereopair_captured();
+
  public:
-  explicit AbstractStereoCamera(QObject *parent = 0);
+  explicit AbstractStereoCamera(QObject *parent = nullptr);
   //virtual void initCamera() = 0;
 
   //! Assign the stereo camera object to a thread so as not to block the GUI. Typically called just after instantiation.
@@ -181,6 +191,8 @@ class AbstractStereoCamera : public QObject {
   */
   virtual bool capture(void) = 0;
 
+
+
   //! Save an image from the camera with a timestamped filename
   /*!
    *  The timestamp format is: yyyyMMdd_hhmmss_zzz (year, month, day, hour, minute, second, millisecond)
@@ -248,8 +260,13 @@ class AbstractStereoCamera : public QObject {
       save_directory = dir;
   }
 
- private:
+private slots:
+    void register_stereo_capture(void);
+
+private:
   qint64 frames = 0;
+  QElapsedTimer frametimer;
+
   bool capturing = false;
   bool acquiring = false;
   bool matching = false;
@@ -258,6 +275,10 @@ class AbstractStereoCamera : public QObject {
   bool has_cuda = false;
   pcl::PointCloud<pcl::PointXYZRGB>::Ptr ptCloud;
   QString save_directory = ".";
+
+  bool captured_left = false;
+  bool captured_right = false;
+  bool captured_stereo = false;
 
   cv::VideoCapture stereo_video;
   bool acquiring_video = false;
@@ -280,7 +301,7 @@ class AbstractStereoCamera : public QObject {
   * This will perform an image capture, followed by optional rectification, matching and reprojection
   * @sa enableRectify(), enableMatching(), enableReproject()
   */
-  void captureAndProcess(void);
+  void process_stereo(void);
 
   //! Save an image
   /*!
@@ -349,7 +370,7 @@ class AbstractStereoCamera : public QObject {
   cv::Mat left_output;
   cv::Mat right_output;
 
-  AbstractStereoMatcher *matcher = NULL;
+  AbstractStereoMatcher *matcher = nullptr;
 
   double visualisation_min_z = 0.2;
   double visualisation_max_z = 2;
@@ -364,6 +385,10 @@ class AbstractStereoCamera : public QObject {
   bool rectification_valid = false;
   bool calibration_valid = false;
   bool connected = false;
+
+protected slots:
+  void register_right_capture(void);
+  void register_left_capture(void);
 
 };
 

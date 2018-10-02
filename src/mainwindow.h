@@ -35,6 +35,7 @@
 #include "calibratefromimagesdialog.h"
 #include "calibrationdialog.h"
 #include "stereocalibrate.h"
+#include "cameradisplaywidget.h"
 
 #include "paramfile.h"
 
@@ -49,7 +50,7 @@ class MainWindow : public QMainWindow {
   Q_OBJECT
 
  public:
-  explicit MainWindow(QWidget* parent = 0);
+  explicit MainWindow(QWidget* parent = nullptr);
   ~MainWindow();
 
  private:
@@ -70,6 +71,8 @@ class MainWindow : public QMainWindow {
   QVariantMap icon_options;
   QtAwesome* awesome;
   DisparityViewer* disparity_view;
+  CameraDisplayWidget *left_view;
+  CameraDisplayWidget *right_view;
 
   bool cameras_connected = false;
 

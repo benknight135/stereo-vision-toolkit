@@ -366,11 +366,11 @@ void AbstractStereoCamera::remap_parallel(cv::Mat src, cv::Mat &dst,
 }
 
 void AbstractStereoCamera::singleShot(void) {
-  acquiring = false;
+    acquiring = false;
 
-  finishCapture();
+    finishCapture();
 
-  captureAndProcess();
+    capture();
 }
 
 void AbstractStereoCamera::finishCapture(void) {
@@ -391,14 +391,9 @@ void AbstractStereoCamera::setMatcher(AbstractStereoMatcher *matcher) {
 
 void AbstractStereoCamera::pause(void) { acquiring = false; }
 
-void AbstractStereoCamera::captureAndProcess(void) {
-  QElapsedTimer frametimer;
-  frametimer.restart();
+void AbstractStereoCamera::process_stereo(void) {
 
-  capturing = true;
-
-  if (capture()) {
-    frames++;
+  frames++;
     emit framecount(frames);
 
     if (rectifying) {
@@ -419,24 +414,47 @@ void AbstractStereoCamera::captureAndProcess(void) {
       emit matched();
     }
 
-    emit acquired();
+    emit stereopair_processed();
     emit fps(frametimer.elapsed());
     frametimer.restart();
-  }
 
-  capturing = false;
+    capturing = false;
+
+    /* Check for events, e.g. pause/quit */
+    QCoreApplication::processEvents();
+
+    if(acquiring && connected){
+        capture();
+    }
+}
+
+void AbstractStereoCamera::register_left_capture(void){
+    captured_left = true;
+    register_stereo_capture();
+}
+
+void AbstractStereoCamera::register_right_capture(void){
+    captured_right = true;
+    register_stereo_capture();
+}
+
+void AbstractStereoCamera::register_stereo_capture(){
+    if(captured_left && captured_right){
+        emit stereopair_captured();
+
+        captured_stereo = true;
+
+        captured_left = false;
+        captured_right = false;
+
+        process_stereo();
+    }
+
 }
 
 void AbstractStereoCamera::freerun(void) {
   acquiring = true;
-
-  do {
-    captureAndProcess();
-    QCoreApplication::processEvents();
-
-  } while (acquiring && connected);
-
-  return;
+  capture();
 }
 
 void AbstractStereoCamera::videoStreamStart(QString fname) {
@@ -469,7 +487,7 @@ void AbstractStereoCamera::videoStreamStart(QString fname) {
     acquiring = false;
 
     do {
-      captureAndProcess();
+      process_stereo();
       QCoreApplication::processEvents();
       cv::hconcat(left_output, right_output, output_frame);
       stereo_video->write(output_frame);
