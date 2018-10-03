@@ -46,7 +46,9 @@ SOURCES += main.cpp\
     disparityviewer.cpp \
     paramfile.cpp \
     cameradisplaywidget.cpp \
-    src/stereocameraphobos.cpp
+    stereocameraphobos.cpp \
+    cameraimagingsource.cpp
+
 
 HEADERS  += mainwindow.h \
     calibrationdialog.h \
@@ -68,7 +70,8 @@ HEADERS  += mainwindow.h \
     disparityviewer.h \
     paramfile.h \
     cameradisplaywidget.h \
-    src/stereocameraphobos.h
+    stereocameraphobos.h \
+    cameraimagingsource.h
 
 FORMS    += mainwindow.ui \
     calibrationdialog.ui \
