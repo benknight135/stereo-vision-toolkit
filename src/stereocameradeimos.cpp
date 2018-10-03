@@ -5,7 +5,7 @@
 
 #include "stereocameradeimos.h"
 
-bool StereoCameraDeimos::initCamera(int devid) {
+bool StereoCameraDeimos::find_systems(int devid) {
   bool res = false;
 
   if (devid < 0) {

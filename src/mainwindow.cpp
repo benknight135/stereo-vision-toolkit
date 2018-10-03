@@ -245,40 +245,36 @@ void MainWindow::stereoCameraRelease(void) {
 }
 
 void MainWindow::stereoCameraLoad(void) {
-  QMessageBox msg;
-  cameras_connected = false;
+     cameras_connected = false;
 
-  /* Look for Deimos present */
-  StereoCameraDeimos* stereo_cam_deimos = new StereoCameraDeimos;
-  QThread* deimos_thread = new QThread;
-  stereo_cam_deimos->assignThread(deimos_thread);
+     StereoCameraPhobos* stereo_cam_phobos = new StereoCameraPhobos;
+     QThread* phobos_thread = new QThread;
+     stereo_cam_phobos->assignThread(phobos_thread);
 
-  if (stereo_cam_deimos->initCamera()) {
-    stereo_cam = (AbstractStereoCamera*)stereo_cam_deimos;
-    cameras_connected = true;
-  } else {
-     ui->statusBar->showMessage("Disconnected.");
-     /*
-    delete stereo_cam_deimos;
+     StereoCameraDeimos* stereo_cam_deimos = new StereoCameraDeimos;
+     QThread* deimos_thread = new QThread;
+     stereo_cam_deimos->assignThread(deimos_thread);
 
-    StereoCameraOpenCV* stereo_cam_cv = new StereoCameraOpenCV;
-    QThread* cam_thread = new QThread;
-    stereo_cam_cv->assignThread(cam_thread);
+     if(stereo_cam_phobos->find_systems()){
+         stereo_cam = (AbstractStereoCamera*) stereo_cam_phobos;
+         left_view->setSettingsCallback(stereo_cam, SLOT(loadLeftSettings()));
+         right_view->setSettingsCallback(stereo_cam, SLOT(loadRightSettings()));
+         qDebug() << "Connecting to Phobos system";
+         cameras_connected = true;
+     }else if (stereo_cam_deimos->find_systems()) {
+         stereo_cam = (AbstractStereoCamera*) stereo_cam_deimos;
+         qDebug() << "Connecting to Deimos system";
+         cameras_connected = true;
+     }else {
+        ui->statusBar->showMessage("Couldn't find any cameras.");
 
-    if (stereo_cam_cv->initCamera()) {
-      stereo_cam = (AbstractStereoCamera*)stereo_cam_cv;
-      cameras_connected = true;
-    } else {
-      msg.setText("Failed to open camera.");
-      msg.exec();
-      ui->statusBar->showMessage("Disconnected.");
-    }
-    */
-  }
+       delete stereo_cam_deimos;
+       delete stereo_cam_phobos;
+     }
 
-  if (cameras_connected) {
-    stereoCameraInit();
-  }
+     if (cameras_connected) {
+       stereoCameraInit();
+     }
 }
 
 void MainWindow::stereoCameraInit() {

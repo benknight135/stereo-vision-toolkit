@@ -265,9 +265,7 @@ private slots:
 
 private:
   qint64 frames = 0;
-  QElapsedTimer frametimer;
 
-  bool capturing = false;
   bool acquiring = false;
   bool matching = false;
   bool rectifying = false;
@@ -278,7 +276,6 @@ private:
 
   bool captured_left = false;
   bool captured_right = false;
-  bool captured_stereo = false;
 
   cv::VideoCapture stereo_video;
   bool acquiring_video = false;
@@ -382,9 +379,13 @@ private:
   int image_height = 0;
   cv::Size image_size;
 
+  QElapsedTimer frametimer;
+
   bool rectification_valid = false;
   bool calibration_valid = false;
   bool connected = false;
+  bool captured_stereo = false;
+  bool capturing = false;
 
 protected slots:
   void register_right_capture(void);

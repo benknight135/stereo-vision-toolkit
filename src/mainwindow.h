@@ -30,6 +30,7 @@
 #include "stereocameradeimos.h"
 #include "stereocamerafromvideo.h"
 #include "stereocameraopencv.h"
+#include "stereocameraphobos.h"
 
 #include <disparityviewer.h>
 #include "calibratefromimagesdialog.h"

@@ -41,7 +41,7 @@ public:
                 {}
     bool capture();
     void disconnectCamera();
-    bool initCamera(int devid = -1);
+    bool find_systems(int devid = -1);
     int findCamera(void);
     bool setFrameSize(int width, int height);
     bool setFrame16(void);

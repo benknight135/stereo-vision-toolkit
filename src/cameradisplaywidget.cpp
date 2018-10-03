@@ -16,7 +16,7 @@ CameraDisplayWidget::CameraDisplayWidget(QWidget *parent) :
 CameraDisplayWidget::~CameraDisplayWidget()
 {
     delete ui;
-    delete display_image;
+    if(display_image != nullptr) delete display_image;
 }
 
 void CameraDisplayWidget::setSize(int width, int height, int bitdepth) {

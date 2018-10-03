@@ -97,6 +97,7 @@ INCLUDEPATH += "$$_PRO_FILE_PWD_/3rd_party/opencv/include"
 INCLUDEPATH += "$$_PRO_FILE_PWD_/3rd_party/VTK/include/vtk-7.0"
 INCLUDEPATH += "$$_PRO_FILE_PWD_/3rd_party/PCL/include/pcl-1.8"
 INCLUDEPATH += "$$_PRO_FILE_PWD_/3rd_party/hidapi/include"
+INCLUDEPATH += "$$_PRO_FILE_PWD_/3rd_party/tis/include"
 
 CONFIG(debug, debug|release) {
     message("Debug mode")
@@ -104,6 +105,7 @@ CONFIG(debug, debug|release) {
     LIBS += -L"$$_PRO_FILE_PWD_/3rd_party/vtk/lib"
     LIBS += -L"$$_PRO_FILE_PWD_/3rd_party/opencv/lib"
     LIBS += -L"$$_PRO_FILE_PWD_/3rd_party/hidapi/lib/debug" -lhidapi
+    LIBS += -L"$$_PRO_FILE_PWD_/3rd_party/tis/lib/debug" -lTIS_UDSHL11d_x64
     LIBS += -lpcl_visualization_debug -lpcl_io_debug -lpcl_common_debug -lpcl_filters_debug
     LIBS += -lopencv_ximgproc341d -lopencv_core341d -lopencv_highgui341d -lopencv_calib3d341d -lopencv_videoio341d -lopencv_imgproc341d -lopencv_imgcodecs341d
     #ifdef CUDA
@@ -115,6 +117,7 @@ CONFIG(debug, debug|release) {
     LIBS += -L"$$_PRO_FILE_PWD_/3rd_party/vtk/lib"
     LIBS += -L"$$_PRO_FILE_PWD_/3rd_party/opencv/lib"
     LIBS += -L"$$_PRO_FILE_PWD_/3rd_party/hidapi/lib/release" -lhidapi
+    LIBS += -L"$$_PRO_FILE_PWD_/3rd_party/tis/lib/release" -lTIS_UDSHL11_x64
     LIBS += -lpcl_visualization_release -lpcl_io_release -lpcl_common_release -lpcl_filters_release
     LIBS += -lopencv_ximgproc341 -lopencv_core341 -lopencv_highgui341 -lopencv_calib3d341 -lopencv_videoio341 -lopencv_imgproc341 -lopencv_imgcodecs341
     #ifdef CUDA
