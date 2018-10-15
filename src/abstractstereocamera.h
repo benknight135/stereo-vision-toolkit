@@ -72,6 +72,8 @@ class AbstractStereoCamera : public QObject {
     //! Emitted when the frame size of a camera changes
     void update_size(int width, int height, int bitdepth);
 
+    void request_capture();
+
 #ifdef CUDA
     //! Emitted if the host system is found to have a CUDA-capable graphics card installed
     void haveCuda();
@@ -262,6 +264,7 @@ class AbstractStereoCamera : public QObject {
 
 private slots:
     void register_stereo_capture(void);
+    void try_capture();
 
 private:
   qint64 frames = 0;

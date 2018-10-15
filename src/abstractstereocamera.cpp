@@ -15,6 +15,13 @@ AbstractStereoCamera::AbstractStereoCamera(QObject *parent) : QObject(parent) {
 #endif
 
   ptCloud = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
+
+  connect(this, SIGNAL(request_capture()), this, SLOT(try_capture()));
+
+}
+
+void AbstractStereoCamera::try_capture(){
+    capture();
 }
 
 void AbstractStereoCamera::assignThread(QThread *thread) {
@@ -371,6 +378,13 @@ void AbstractStereoCamera::singleShot(void) {
     finishCapture();
 
     capture();
+
+    while(!captured_stereo){
+      /* Check for events, e.g. pause/quit */
+      QCoreApplication::processEvents();
+     }
+
+    process_stereo();
 }
 
 void AbstractStereoCamera::finishCapture(void) {
@@ -381,10 +395,10 @@ void AbstractStereoCamera::finishCapture(void) {
 
 void AbstractStereoCamera::setMatcher(AbstractStereoMatcher *matcher) {
 
-  enableCapture(false);
+  enableAcquire(false);
   this->matcher = matcher;
   this->matcher->setImages(&left_remapped, &right_remapped);
-  enableCapture(true);
+  enableAcquire(true);
 
   qDebug() << "Changed matcher";
 }
@@ -418,14 +432,6 @@ void AbstractStereoCamera::process_stereo(void) {
     emit fps(frametimer.elapsed());
     frametimer.restart();
 
-    capturing = false;
-
-    /* Check for events, e.g. pause/quit */
-    QCoreApplication::processEvents();
-
-    if(acquiring && connected){
-        capture();
-    }
 }
 
 void AbstractStereoCamera::register_left_capture(void){
@@ -446,15 +452,24 @@ void AbstractStereoCamera::register_stereo_capture(){
 
         captured_left = false;
         captured_right = false;
-
-        process_stereo();
     }
 
 }
 
 void AbstractStereoCamera::freerun(void) {
   acquiring = true;
-  capture();
+  while(acquiring && connected){
+      captured_stereo = false;
+
+      capture();
+
+      while(!captured_stereo){
+        /* Check for events, e.g. pause/quit */
+        QCoreApplication::processEvents();
+       }
+
+      process_stereo();
+  }
 }
 
 void AbstractStereoCamera::videoStreamStart(QString fname) {

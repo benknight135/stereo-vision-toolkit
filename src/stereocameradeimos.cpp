@@ -25,7 +25,7 @@ bool StereoCameraDeimos::find_systems(int devid) {
 
       temperature_timer = new QTimer(parent());
       temperature_timer->setInterval(1000);
-      connect(temperature_timer, SIGNAL(timeout()), this, SLOT(getTemperature()));
+      //connect(temperature_timer, SIGNAL(timeout()), this, SLOT(getTemperature()));
       temperature_timer->start();
 
       if (!res) {
@@ -102,8 +102,7 @@ int StereoCameraDeimos::getExposure() {
 }
 
 double StereoCameraDeimos::getTemperature(void){
-    std::vector<unsigned char> buffer;
-    buffer.resize(16);
+    std::vector<unsigned char> buffer(16);
 
     buffer.at(1) = CAMERA_CONTROL_STEREO;
     buffer.at(2) = GET_IMU_TEMP_DATA;
@@ -322,9 +321,12 @@ void StereoCameraDeimos::disconnectCamera() {
 
   bool StereoCameraDeimos::capture() {
 
+    if(capturing) return false;
+
     QElapsedTimer frametimer;
     frametimer.restart();
 
+    captured_stereo = false;
     capturing = true;
 
     bool res = false;
@@ -355,6 +357,8 @@ void StereoCameraDeimos::disconnectCamera() {
     if(!res){
         disconnectCamera();
     }
+
+    capturing = false;
 
     return res;
   }
