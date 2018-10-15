@@ -6,6 +6,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#define _USE_MATH_DEFINES
+
 #include <QtAwesome.h>
 #include <QDebug>
 #include <QDir>

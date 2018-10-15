@@ -16,8 +16,9 @@ AbstractStereoCamera::AbstractStereoCamera(QObject *parent) : QObject(parent) {
 
   ptCloud = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
 
-  connect(this, SIGNAL(request_capture()), this, SLOT(try_capture()));
-
+  connect(this, SIGNAL(stereopair_captured()), this, SLOT(process_stereo()));
+  connect(this, SIGNAL(left_captured()), this, SLOT(register_left_capture()));
+  connect(this, SIGNAL(right_captured()), this, SLOT(register_right_capture()));
 }
 
 void AbstractStereoCamera::try_capture(){
@@ -372,26 +373,6 @@ void AbstractStereoCamera::remap_parallel(cv::Mat src, cv::Mat &dst,
   cv::remap(src, dst, rmapx, rmapy, cv::INTER_CUBIC);
 }
 
-void AbstractStereoCamera::singleShot(void) {
-    acquiring = false;
-
-    finishCapture();
-
-    capture();
-
-    while(!captured_stereo){
-      /* Check for events, e.g. pause/quit */
-      QCoreApplication::processEvents();
-     }
-
-    process_stereo();
-}
-
-void AbstractStereoCamera::finishCapture(void) {
-  while (capturing) {
-    QCoreApplication::processEvents();
-  }
-}
 
 void AbstractStereoCamera::setMatcher(AbstractStereoMatcher *matcher) {
 
@@ -402,8 +383,6 @@ void AbstractStereoCamera::setMatcher(AbstractStereoMatcher *matcher) {
 
   qDebug() << "Changed matcher";
 }
-
-void AbstractStereoCamera::pause(void) { acquiring = false; }
 
 void AbstractStereoCamera::process_stereo(void) {
 
@@ -456,20 +435,41 @@ void AbstractStereoCamera::register_stereo_capture(){
 
 }
 
+void AbstractStereoCamera::pause(void) {
+    acquiring = false;
+    finishCapture();
+
+}
+
+void AbstractStereoCamera::singleShot(void) {
+    pause();
+    capture_and_process();
+}
+
+void AbstractStereoCamera::finishCapture(void) {
+  while (capturing) {
+    QCoreApplication::processEvents();
+  }
+}
+
 void AbstractStereoCamera::freerun(void) {
   acquiring = true;
+
   while(acquiring && connected){
-      captured_stereo = false;
-
-      capture();
-
-      while(!captured_stereo){
-        /* Check for events, e.g. pause/quit */
-        QCoreApplication::processEvents();
-       }
-
-      process_stereo();
+      capture_and_process();
   }
+}
+
+void AbstractStereoCamera::capture_and_process(void){
+    captured_stereo = false;
+
+    // Capture, process_stereo is called via signal/slot
+    capture();
+
+    while(!captured_stereo){
+      /* Check for events, e.g. pause/quit */
+      QCoreApplication::processEvents();
+    }
 }
 
 void AbstractStereoCamera::videoStreamStart(QString fname) {

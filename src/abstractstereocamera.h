@@ -6,6 +6,8 @@
 #ifndef ABSTRACTSTEREOCAMERA_H
 #define ABSTRACTSTEREOCAMERA_H
 
+#define _USE_MATH_DEFINES
+
 #include <abstractstereomatcher.h>
 
 #include <QCoreApplication>
@@ -66,6 +68,10 @@ class AbstractStereoCamera : public QObject {
 
     //! Emitted when a camera has captured an image, typically used in sub-classes
     void captured();
+
+    void left_captured();
+
+    void right_captured();
 
     void stereopair_processed();
 
@@ -265,6 +271,14 @@ class AbstractStereoCamera : public QObject {
 private slots:
     void register_stereo_capture(void);
     void try_capture();
+    void capture_and_process();
+
+    //! Grab and process a frame from the camera
+    /*!
+    * This will perform an image capture, followed by optional rectification, matching and reprojection
+    * @sa enableRectify(), enableMatching(), enableReproject()
+    */
+    void process_stereo(void);
 
 private:
   qint64 frames = 0;
@@ -295,13 +309,6 @@ private:
 
   //! Block until a capture has finished
   void finishCapture(void);
-
-  //! Grab and process a frame from the camera
-  /*!
-  * This will perform an image capture, followed by optional rectification, matching and reprojection
-  * @sa enableRectify(), enableMatching(), enableReproject()
-  */
-  void process_stereo(void);
 
   //! Save an image
   /*!

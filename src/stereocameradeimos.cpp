@@ -323,7 +323,6 @@ void StereoCameraDeimos::disconnectCamera() {
 
     if(capturing) return false;
 
-    QElapsedTimer frametimer;
     frametimer.restart();
 
     captured_stereo = false;
@@ -340,8 +339,8 @@ void StereoCameraDeimos::disconnectCamera() {
             left_raw = channels[1].clone();
             right_raw = channels[2].clone();
 
-            register_left_capture();
-            register_right_capture();
+            emit left_captured();
+            emit right_captured();
 
             res = true;
 
