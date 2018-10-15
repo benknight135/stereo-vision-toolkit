@@ -322,17 +322,24 @@ void StereoCameraDeimos::disconnectCamera() {
 
   bool StereoCameraDeimos::capture() {
 
+    QElapsedTimer frametimer;
+    frametimer.restart();
+
+    capturing = true;
+
     bool res = false;
 
     if(connected && camera.grab()){
         if(camera.retrieve(image_buffer)){
-            emit captured();
 
             flip(image_buffer, image_buffer, 0);
             split(image_buffer, channels);
 
             left_raw = channels[1].clone();
             right_raw = channels[2].clone();
+
+            register_left_capture();
+            register_right_capture();
 
             res = true;
 

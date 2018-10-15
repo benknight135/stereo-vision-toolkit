@@ -53,11 +53,11 @@ private:
     Ui::CameraDisplayWidget *ui;
 
     QVector<QRgb> colourMap;
-    int camwidth;
-    int camheight;
+    int camwidth = 0;
+    int camheight = 0;
 
     QPixmap pixmap;
-    QImage *display_image;
+    QImage *display_image = nullptr;
 
     bool capturing = true;
     std::vector<unsigned char> displayBuffer;
