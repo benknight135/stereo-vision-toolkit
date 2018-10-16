@@ -456,6 +456,7 @@ void AbstractStereoCamera::freerun(void) {
   acquiring = true;
 
   while(acquiring && connected){
+      QCoreApplication::processEvents();
       capture_and_process();
   }
 }
