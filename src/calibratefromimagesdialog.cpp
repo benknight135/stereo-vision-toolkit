@@ -11,7 +11,7 @@ CalibrateFromImagesDialog::CalibrateFromImagesDialog(QWidget *parent)
   ui->setupUi(this);
 
   connect(ui->calibrationPathButton, SIGNAL(clicked(bool)), this,
-          SLOT(selectCalibrationOutputPath()));
+          SLOT(selectOutputPath()));
   connect(ui->leftPathButton, SIGNAL(clicked(bool)), this,
           SLOT(selectLeftImageRoot()));
   connect(ui->rightPathButton, SIGNAL(clicked(bool)), this,
