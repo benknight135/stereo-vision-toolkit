@@ -182,10 +182,10 @@
         </size>
        </property>
        <property name="minimum">
-        <number>-200</number>
+        <number>-300</number>
        </property>
        <property name="maximum">
-        <number>200</number>
+        <number>300</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
