@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget* parent)
   ui->imageViewTab->raise();
   ui->tabWidget->lower();
 
+  ui->tabWidget->setCurrentIndex(0);
+
   /* Calibration */
   connect(ui->actionCalibration_wizard, SIGNAL(triggered(bool)), this,
           SLOT(startCalibration()));
@@ -291,17 +293,11 @@ void MainWindow::stereoCameraInit() {
       stereo_cam->setSavelocation(save_directory);
     }
 
-    bool res = stereo_cam->loadCalibration(calibration_directory);
-    if(res){
-        qDebug() << "Calibration folder: " << calibration_directory;
-    }else{
-        qDebug() << "Failed to load calibration";
+    if (calibration_directory != ""){
+        setCalibrationFolder(calibration_directory);
     }
 
-    ui->toggleRectifyCheckBox->setEnabled(res);
-    ui->toggleRectifyCheckBox->setChecked(res);
-    stereo_cam->enableRectify(res);
-
+    // TODO: Get this from calibration file
     disparity_view->setCalibration(stereo_cam->Q, 60e-3, 4.3e-3);
     disparity_view->updatePixmapRange();
 
@@ -427,6 +423,7 @@ void MainWindow::runCalibrationFromImages(void){
     double square_size_mm = calibration_images_dialog->getSquareSizeMm();
     auto left_images = calibration_images_dialog->getLeftImages();
     auto right_images = calibration_images_dialog->getRightImages();
+    bool save_ros = calibration_images_dialog->getSaveROS();
 
     calibration_images_dialog->close();
 
@@ -436,6 +433,7 @@ void MainWindow::runCalibrationFromImages(void){
     calibrator->setOutputPath(calibration_images_dialog->getOutputPath());
     calibrator->setPattern(pattern, square_size_mm);
     calibrator->setImages(left_images, right_images);
+    calibrator->setSaveROS(save_ros);
     calibrator->jointCalibration();
 
 }
@@ -532,24 +530,28 @@ void MainWindow::setupMatchers(void) {
 }
 
 void MainWindow::setCalibrationFolder(QString dir) {
-  if(dir == ""){
+    if(dir == ""){
       dir = QFileDialog::getExistingDirectory(
       this, tr("Open Calibration Folder"), "/home",
       QFileDialog::DontResolveSymlinks);
-  }
+    }
 
-  if (dir != "") {
-    if (!stereo_cam->loadCalibration(dir)) {
+    if(dir == "") return;
+
+    bool res = stereo_cam->loadCalibration(dir);
+
+    if(!res) {
       QMessageBox msg;
       msg.setText("Unable to load calibration files");
       msg.exec();
     }else{
-      // Calibration valid
-      stereo_cam->enableRectify(true);
-      ui->toggleRectifyCheckBox->setEnabled(true);
-      parameters->update_string("calDir", dir);
+        calibration_directory = dir;
+        parameters->update_string("calDir", calibration_directory);
     }
-  }
+
+    ui->toggleRectifyCheckBox->setEnabled(res);
+    ui->toggleRectifyCheckBox->setChecked(res);
+
 }
 
 void MainWindow::statusMessageTimeout(void) {

@@ -70,16 +70,17 @@ class AbstractStereoCamera : public QObject {
     //! Emitted when a camera has captured an image, typically used in sub-classes
     void captured();
 
+    //! Emitted when the left camera captures an image
     void left_captured();
 
+    //! Emitted when the right camera captures an image
     void right_captured();
 
+    //! Emitted when a stereo pair is processed
     void stereopair_processed();
 
     //! Emitted when the frame size of a camera changes
     void update_size(int width, int height, int bitdepth);
-
-    void request_capture();
 
 #ifdef CUDA
     //! Emitted if the host system is found to have a CUDA-capable graphics card installed

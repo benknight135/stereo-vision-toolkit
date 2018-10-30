@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['update_5fsize',['update_size',['../class_abstract_stereo_camera.html#a739c0a904e281dd6ad522a8a0642c4e2',1,'AbstractStereoCamera']]]
+  ['videostreamstart',['videoStreamStart',['../class_abstract_stereo_camera.html#af58b04dd9c17e4d5cc139eb99d738cc6',1,'AbstractStereoCamera']]],
+  ['videostreamstop',['videoStreamStop',['../class_abstract_stereo_camera.html#ae39e6f45c68b4bbd4442fdac161051bd',1,'AbstractStereoCamera']]]
 ];
