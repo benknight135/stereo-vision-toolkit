@@ -67,6 +67,8 @@ class StereoCalibrate : public QObject {
   std::vector<bool> left_valid;
   std::vector<bool> right_valid;
 
+  cv::Mat R1, R2, P1, P2;
+
   QDir output_folder = QCoreApplication::applicationDirPath() + "/params/";
 
   std::vector<cv::Point3f> pattern_points;
@@ -111,6 +113,7 @@ class StereoCalibrate : public QObject {
   void overlayArrow(cv::Mat& image, std::vector<cv::Point2f>& points,
                     cv::Point2f offset, CvScalar colour, int thickness = 3);
   bool jointCalibration(void);
+  bool outputRosYaml(QString filename, QString camera_name, cv::Size image_size, cv::Mat camera_matrix, cv::Mat dist_coeffs, cv::Mat P, cv::Mat R);
 
  signals:
   void doneCalibration(bool);

@@ -69,7 +69,7 @@ void calibrateconfirmdialog::updateStereo(const cv::Mat Q, const double &rms) {
 
    ui->stereo_focal->setText(QString::number(Q.at<double>(2,3), 'f', 2));
    ui->stereo_principle->setText(QString("%1 %2 px").arg(cx).arg(cy));
-   ui->stereo_baseline->setText(QString::number(1000*baseline, 'f', 2));
+   ui->stereo_baseline->setText(QString("%1 mm").arg(QString::number(1000*baseline, 'f', 2)));
    ui->stereo_rms->setText(QString("%1 px").arg(QString::number(rms, 'f', 3)));
 
    ui->stereo_parameters->setEnabled(true);
