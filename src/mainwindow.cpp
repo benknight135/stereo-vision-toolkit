@@ -188,6 +188,7 @@ void MainWindow::stereoCameraInitConnections(void) {
   connect(ui->maxZSpinBox, SIGNAL(valueChanged(double)), stereo_cam,
           SLOT(setVisualZmax(double)));
   connect(ui->savePointCloudButton, SIGNAL(clicked()), stereo_cam, SLOT(savePointCloud()));
+  connect(ui->dateInFilenameCheckbox, SIGNAL(stateChanged(int)), stereo_cam, SLOT(toggleDateInFilename(int)));
 }
 
 void MainWindow::stereoCameraRelease(void) {

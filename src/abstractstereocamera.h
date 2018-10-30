@@ -16,6 +16,7 @@
 #include <QMessageBox>
 #include <QtConcurrent/QtConcurrent>
 #include <QDir>
+#include <QDebug>
 
 #include<memory>
 
@@ -251,6 +252,9 @@ class AbstractStereoCamera : public QObject {
   */
   void setVisualZmax(double zmax);
 
+  //! Toggle saving date in filename
+  void toggleDateInFilename(int state);
+
   //! Save the current 3D reconstruction to a .PLY file
   void savePointCloud();
 
@@ -283,6 +287,7 @@ private slots:
 private:
   qint64 frames = 0;
 
+  bool includeDateInFilename = false;
   bool acquiring = false;
   bool matching = false;
   bool rectifying = false;

@@ -177,14 +177,29 @@ pcl::PointCloud<pcl::PointXYZRGB>::Ptr AbstractStereoCamera::getPointCloud(){
     return ptCloud;
 }
 
+void AbstractStereoCamera::toggleDateInFilename(int state){
+    if (state == Qt::Checked){
+        includeDateInFilename = true;
+    } else if (state == Qt::Unchecked){
+        includeDateInFilename = false;
+    }
+}
+
 void AbstractStereoCamera::savePointCloud(){
 
     QString fname;
-    QDateTime dateTime = dateTime.currentDateTime();
-    QString date_string = dateTime.toString("yyyyMMdd_hhmmss_zzz");
 
-    fname = QString("%1/%2_point_cloud.ply").arg(save_directory).arg(date_string);
+    if (includeDateInFilename){
+        //Point cloud file name includes date to avoid overwritting and differentiate
+        QDateTime dateTime = dateTime.currentDateTime();
+        QString date_string = dateTime.toString("yyyyMMdd_hhmmss_zzz");
+        fname = QString("%1/%2_point_cloud.ply").arg(save_directory).arg(date_string);
+    } else {
+        //Point cloud file name fixed to allow overwritting
+        fname = QString("%1/point_cloud.ply").arg(save_directory);
+    }
 
+    qDebug() << "Point cloud saving to... " << fname;
     ptCloud->sensor_orientation_ = Eigen::Quaternionf::Identity();
     ptCloud->sensor_origin_ = Eigen::Vector4f::Zero();
 
