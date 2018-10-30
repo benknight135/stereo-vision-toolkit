@@ -218,9 +218,10 @@ bool StereoCalibrate::jointCalibration(void) {
       alert.setText(QString("Written calibration files to: %1").arg(output_folder.absolutePath()));
       alert.exec();
 
-      outputRosYaml(output_folder.absoluteFilePath("left.yaml"), "leftCamera", left_images.front().size(), left_camera_matrix, left_distortion, P1, R1);
-      outputRosYaml(output_folder.absoluteFilePath("right.yaml"), "rightCamera", right_images.front().size(), right_camera_matrix, right_distortion, P2, R2);
-
+      if(save_ros){
+        outputRosYaml(output_folder.absoluteFilePath("left.yaml"), "leftCamera", left_images.front().size(), left_camera_matrix, left_distortion, P1, R1);
+        outputRosYaml(output_folder.absoluteFilePath("right.yaml"), "rightCamera", right_images.front().size(), right_camera_matrix, right_distortion, P2, R2);
+      }
       finishedCalibration();
 
       return true;

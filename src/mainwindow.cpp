@@ -421,6 +421,7 @@ void MainWindow::runCalibrationFromImages(void){
     double square_size_mm = calibration_images_dialog->getSquareSizeMm();
     auto left_images = calibration_images_dialog->getLeftImages();
     auto right_images = calibration_images_dialog->getRightImages();
+    bool save_ros = calibration_images_dialog->getSaveROS();
 
     calibration_images_dialog->close();
 
@@ -430,6 +431,7 @@ void MainWindow::runCalibrationFromImages(void){
     calibrator->setOutputPath(calibration_images_dialog->getOutputPath());
     calibrator->setPattern(pattern, square_size_mm);
     calibrator->setImages(left_images, right_images);
+    calibrator->setSaveROS(save_ros);
     calibrator->jointCalibration();
 
 }

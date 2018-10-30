@@ -78,6 +78,10 @@ double CalibrateFromImagesDialog::getSquareSizeMm(){
     return ui->squareSizeBox->value() * 1e-3;
 }
 
+bool CalibrateFromImagesDialog::getSaveROS(){
+    return ui->rosOutputCheckBox->isChecked();
+}
+
 CalibrateFromImagesDialog::~CalibrateFromImagesDialog() { delete ui; }
 
 void CalibrateFromImagesDialog::setLeftImages() {

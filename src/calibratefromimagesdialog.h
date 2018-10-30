@@ -39,6 +39,7 @@ public:
     int getPatternCols();
     int getPatternRows();
     double getSquareSizeMm();
+    bool getSaveROS();
     QString getOutputPath(void){return output_path;}
 
 private:
