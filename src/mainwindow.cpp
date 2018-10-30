@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget* parent)
   ui->imageViewTab->raise();
   ui->tabWidget->lower();
 
+  ui->tabWidget->setCurrentIndex(0);
+
   /* Calibration */
   connect(ui->actionCalibration_wizard, SIGNAL(triggered(bool)), this,
           SLOT(startCalibration()));
