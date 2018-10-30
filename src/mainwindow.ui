@@ -333,7 +333,7 @@
        <enum>QTabWidget::North</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="imageViewTab">
        <attribute name="title">
@@ -607,6 +607,13 @@
            </spacer>
           </item>
           <item>
+           <widget class="QCheckBox" name="dateInFilenameCheckbox">
+            <property name="text">
+             <string>Include date in filename</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="savePointCloudButton">
             <property name="text">
              <string>Save point cloud</string>
@@ -705,7 +712,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>17</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
