@@ -204,7 +204,17 @@ void AbstractStereoCamera::savePointCloud(){
     ptCloud->sensor_origin_ = Eigen::Vector4f::Zero();
 
     //TODO Figure out how to disable outputting camera information in the PLY file
-    pcl::io::savePLYFile(fname.toStdString(), *ptCloud);
+    int exit_code = pcl::io::savePLYFile(fname.toStdString(), *ptCloud);
+
+    QString msgBoxMessage;
+    if (exit_code == 0){ //Point cloud saved successfully
+        msgBoxMessage = QString("Point cloud saved to...\n%1").arg(fname);
+    } else if (exit_code == -1){ //Empty point cloud
+        msgBoxMessage = QString("Unable to save as point cloud is empty. Check calibration has been completed and 3D visual shows data before saving.");
+    } else { //Unknown error code
+        msgBoxMessage = QString("Failed to save point cloud. Unknown error occured.");
+    }
+    pointCloudSaveStatus(msgBoxMessage);
 }
 
 void AbstractStereoCamera::enableReproject(bool reproject) {

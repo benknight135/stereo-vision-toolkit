@@ -43,6 +43,8 @@ class AbstractStereoCamera : public QObject {
   Q_OBJECT
 
  signals:
+    void pointCloudSaveStatus(QString);
+
     //! Emitted when a frame has been captured and processed
     void acquired();
 

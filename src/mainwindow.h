@@ -136,6 +136,8 @@ class MainWindow : public QMainWindow {
   void updateCloud(void);
   void enable3DViz(int);
   void resetPointCloudView(void);
+
+  void pointCloudSaveStatus(QString);
 };
 
 #endif  // MAINWINDOW_H

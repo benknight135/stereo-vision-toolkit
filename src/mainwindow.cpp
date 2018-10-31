@@ -45,6 +45,11 @@ MainWindow::MainWindow(QWidget* parent)
   pointCloudInit();
 }
 
+void MainWindow::pointCloudSaveStatus(QString msg){
+    qDebug() << msg;
+    QMessageBox::warning(this,"Stereo Vision Toolkit",msg);
+}
+
 void MainWindow::statusBarInit(void) {
   QWidget* status_widget = new QWidget;
   ui->statusBar->addPermanentWidget(status_widget);
@@ -191,6 +196,7 @@ void MainWindow::stereoCameraInitConnections(void) {
           SLOT(setVisualZmax(double)));
   connect(ui->savePointCloudButton, SIGNAL(clicked()), stereo_cam, SLOT(savePointCloud()));
   connect(ui->dateInFilenameCheckbox, SIGNAL(stateChanged(int)), stereo_cam, SLOT(toggleDateInFilename(int)));
+  connect(stereo_cam, SIGNAL(pointCloudSaveStatus(QString)),this,SLOT(pointCloudSaveStatus(QString)));
 }
 
 void MainWindow::stereoCameraRelease(void) {
