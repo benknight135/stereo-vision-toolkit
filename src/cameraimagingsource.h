@@ -47,7 +47,7 @@ class Listener : public QObject, public DShowLib::GrabberListener {
   explicit Listener(QObject* parent = 0) : QObject(parent) {}
   ~Listener(void) {}
 
-  void frameReady(DShowLib::Grabber& caller,
+  void frameReady(DShowLib::Grabber& /* caller */,
                   smart_ptr<DShowLib::MemBuffer> pBuffer, DWORD FrameNumber) {
     pBuffer->lock();
 

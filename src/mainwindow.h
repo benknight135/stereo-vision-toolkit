@@ -117,7 +117,7 @@ class MainWindow : public QMainWindow {
   void statusMessageTimeout(void);
   void setMatcher(int matcher);
 
-  void stereoCameraLoad(void);
+  int stereoCameraLoad(void);
   void autoloadCameraTriggered();
   void videoStreamLoad(void);
 

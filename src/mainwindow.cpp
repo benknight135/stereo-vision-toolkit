@@ -41,7 +41,12 @@ MainWindow::MainWindow(QWidget* parent)
 
   controlsInit();
   statusBarInit();
-  stereoCameraLoad();
+  int stereo_camera_exit_code = stereoCameraLoad();
+  if (stereo_camera_exit_code < 0){
+      //Display quit messagebox as program does not function correctly if no camera is connected
+      QMessageBox::warning(this,"Stereo Vision Toolkit","Couldn't find any camera connected. Program will now exit. Check a Deimos or Phobos camera is connected and restart the program.");
+      exit(EXIT_FAILURE);
+  }
   pointCloudInit();
 }
 
@@ -240,6 +245,8 @@ void MainWindow::stereoCameraRelease(void) {
     disconnect(ui->maxZSpinBox, SIGNAL(valueChanged(double)), stereo_cam,
                SLOT(setVisualZmax(double)));
     disconnect(ui->savePointCloudButton, SIGNAL(clicked()), stereo_cam, SLOT(savePointCloud()));
+    disconnect(ui->dateInFilenameCheckbox, SIGNAL(stateChanged(int)), stereo_cam, SLOT(toggleDateInFilename(int)));
+    disconnect(stereo_cam, SIGNAL(pointCloudSaveStatus(QString)),this,SLOT(pointCloudSaveStatus(QString)));
 
     stereo_cam->pause();
     stereo_cam->enableRectify(false);
@@ -253,8 +260,9 @@ void MainWindow::stereoCameraRelease(void) {
   }
 }
 
-void MainWindow::stereoCameraLoad(void) {
+int MainWindow::stereoCameraLoad(void) {
      cameras_connected = false;
+     int exit_code = -1;
 
      StereoCameraPhobos* stereo_cam_phobos = new StereoCameraPhobos;
      QThread* phobos_thread = new QThread;
@@ -270,20 +278,25 @@ void MainWindow::stereoCameraLoad(void) {
          right_view->setSettingsCallback(stereo_cam, SLOT(loadRightSettings()));
          qDebug() << "Connecting to Phobos system";
          cameras_connected = true;
+         exit_code = 0;
      }else if (stereo_cam_deimos->find_systems()) {
          stereo_cam = (AbstractStereoCamera*) stereo_cam_deimos;
          qDebug() << "Connecting to Deimos system";
          cameras_connected = true;
+         exit_code = 0;
      }else {
         ui->statusBar->showMessage("Couldn't find any cameras.");
+        qDebug() << "Couldn't find any cameras";
 
-       delete stereo_cam_deimos;
-       delete stereo_cam_phobos;
+        delete stereo_cam_deimos;
+        delete stereo_cam_phobos;
+        exit_code = -1;
      }
 
      if (cameras_connected) {
        stereoCameraInit();
      }
+     return (exit_code);
 }
 
 void MainWindow::stereoCameraInit() {
