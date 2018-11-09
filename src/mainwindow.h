@@ -100,9 +100,8 @@ class MainWindow : public QMainWindow {
   void controlsInit();
   void pointCloudInit();
 
-  void stereoCameraRelease(void);
   void stereoCameraInit(void);
-
+  void stereoCameraRelease(void);
   void stereoCameraInitConnections(void);
 
  public slots:
@@ -116,6 +115,9 @@ class MainWindow : public QMainWindow {
   void displaySaved(QString fname);
   void statusMessageTimeout(void);
   void setMatcher(int matcher);
+
+  void disableWindow();
+  void enableWindow();
 
   int stereoCameraLoad(void);
   void autoloadCameraTriggered();

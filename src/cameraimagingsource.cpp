@@ -182,12 +182,16 @@ double CameraImagingSource::getExposure() {
 }
 
 void CameraImagingSource::grabImage() {
-  if (!handle.isLive()) debugMessage("Not live");
+
+  if (!handle.isLive()){
+      qDebug() << "Not live";
+      emit grabError();
+  }
 
   auto result = frame_sink->snapImagesAsync(1);
 
   if (result.isError()) {
-    debugMessage("Failed to capture image");
+    qDebug() << "Failed to capture image";
     qDebug() << result.c_str();
     emit grabError();
   }

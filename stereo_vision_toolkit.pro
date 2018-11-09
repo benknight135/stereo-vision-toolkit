@@ -3,7 +3,7 @@
 # Project created by QtCreator 2016-10-26T16:38:42
 #
 # Copyright I3D Robotics Ltd, 2017
-# Author: Josh Veitch-Michaelis
+# Authors: Josh Veitch-Michaelis, Ben Knight
 #
 #-------------------------------------------------
 
@@ -37,9 +37,9 @@ SOURCES += main.cpp\
     cameraopencv.cpp \
     stereocameraopencv.cpp \
     stereocameradeimos.cpp \
+    stereocamerafromvideo.cpp \
     matcheropencvblock.cpp \
     matcherwidgetopencvblock.cpp \
-    stereocamerafromvideo.cpp \
     matcheropencvsgbm.cpp \
     matcherwidget.cpp \
     matcherwidgetopencvsgbm.cpp \
@@ -61,9 +61,9 @@ HEADERS  += mainwindow.h \
     cameraopencv.h \
     stereocameraopencv.h \
     stereocameradeimos.h \
+    stereocamerafromvideo.h \
     matcheropencvblock.h \
     matcherwidgetopencvblock.h \
-    stereocamerafromvideo.h \
     matcheropencvsgbm.h \
     matcherwidget.h \
     matcherwidgetopencvsgbm.h \
@@ -71,7 +71,8 @@ HEADERS  += mainwindow.h \
     paramfile.h \
     cameradisplaywidget.h \
     stereocameraphobos.h \
-    cameraimagingsource.h
+    cameraimagingsource.h \
+
 
 FORMS    += mainwindow.ui \
     calibrationdialog.ui \
@@ -122,7 +123,7 @@ CONFIG(debug, debug|release) {
     LIBS += -lpcl_visualization_release -lpcl_io_release -lpcl_common_release -lpcl_filters_release
     LIBS += -lopencv_ximgproc341 -lopencv_core341 -lopencv_highgui341 -lopencv_calib3d341 -lopencv_videoio341 -lopencv_imgproc341 -lopencv_imgcodecs341
     @#ifdef CUDA
-    LIBS += -lopencv_cudastereo341 -lopencv_cudawarpi41ng3
+    LIBS += -lopencv_cudastereo341 -lopencv_cudawarping341
     @#endif
 }
 
@@ -158,10 +159,10 @@ macx {
 
 CONFIG( debug, debug|release ) {
     # debug
-    DEPLOY_TARGET = $$shell_quote($$shell_path($${OUT_PWD}/debug/$${TARGET}$${TARGET_CUSTOM_EXT}))
+    DEPLOY_TARGET = $$shell_quote($$shell_path($${_PRO_FILE_PWD_}/../build/debug/$${TARGET}$${TARGET_CUSTOM_EXT}))
 } else {
     # release
-    DEPLOY_TARGET = $$shell_quote($$shell_path($${OUT_PWD}/release/$${TARGET}$${TARGET_CUSTOM_EXT}))
+    DEPLOY_TARGET = $$shell_quote($$shell_path($${_PRO_FILE_PWD_}/../build/release/$${TARGET}$${TARGET_CUSTOM_EXT}))
 }
 
 #  # Uncomment the following line to help debug the deploy command when running qmake
@@ -171,5 +172,5 @@ CONFIG( debug, debug|release ) {
 QMAKE_POST_LINK += $${DEPLOY_COMMAND} $${DEPLOY_TARGET}
 
 CONFIG( doc ){
-    QMAKE_POST_LINK +=&& cd .. && doxygen
+    QMAKE_POST_LINK += && cd $${_PRO_FILE_PWD_} && doxygen
 }

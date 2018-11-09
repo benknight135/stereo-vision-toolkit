@@ -150,15 +150,27 @@ void StereoCameraPhobos::setup_cameras(){
     connect((Listener*) left_camera->getListener(), SIGNAL(grabbed(void*)), this, SLOT(register_left_capture()));
     connect((Listener*) right_camera->getListener(), SIGNAL(grabbed(void*)), this, SLOT(register_right_capture()));
 
+    connect((Listener*) left_camera->getListener(), SIGNAL(deviceDisconnected()), this, SLOT(disconnectCamera()));
+    connect((Listener*) right_camera->getListener(), SIGNAL(deviceDisconnected()), this, SLOT(disconnectCamera()));
+
     connect(this, SIGNAL(start_capture(void)), left_camera, SLOT(startCapture(void)));
     connect(this, SIGNAL(start_capture(void)), right_camera, SLOT(startCapture(void)));
 
     connect(this, SIGNAL(stereo_grab(void)), left_camera, SLOT(grabImage(void)));
     connect(this, SIGNAL(stereo_grab(void)), right_camera, SLOT(grabImage(void)));
 
+    connect(left_camera, SIGNAL(grabError()), this, SLOT(disconnectCamera()));
+    connect(right_camera, SIGNAL(grabError()), this, SLOT(disconnectCamera()));
+
     connected = true;
 
     emit start_capture();
+}
+
+void StereoCameraPhobos::disconnectCamera(){
+    //left_camera->disconnect();
+    //right_camera->disconnect();
+    emit disconnected();
 }
 
 void StereoCameraPhobos::loadLeftSettings(){

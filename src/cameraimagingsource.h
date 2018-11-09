@@ -19,6 +19,8 @@ class Listener : public QObject, public DShowLib::GrabberListener {
   Q_OBJECT
  signals:
   void grabbed(void*);
+  void deviceDisconnected();
+  void grabFailed();
   void done();
   void frame_number(int);
   void frameTime(uint);
@@ -46,6 +48,10 @@ class Listener : public QObject, public DShowLib::GrabberListener {
  public:
   explicit Listener(QObject* parent = 0) : QObject(parent) {}
   ~Listener(void) {}
+
+  void deviceLost(DShowLib::Grabber& /* caller */){
+    emit deviceDisconnected();
+  }
 
   void frameReady(DShowLib::Grabber& /* caller */,
                   smart_ptr<DShowLib::MemBuffer> pBuffer, DWORD FrameNumber) {

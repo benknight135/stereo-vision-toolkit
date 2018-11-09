@@ -39,15 +39,57 @@ MainWindow::MainWindow(QWidget* parent)
   ui->stereoViewLayout->addWidget(left_view);
   ui->stereoViewLayout->addWidget(right_view);
 
+  //disable tabs untill camera is connected to prevent crashes
+  disableWindow();
+
   controlsInit();
   statusBarInit();
   int stereo_camera_exit_code = stereoCameraLoad();
   if (stereo_camera_exit_code < 0){
       //Display quit messagebox as program does not function correctly if no camera is connected
-      QMessageBox::warning(this,"Stereo Vision Toolkit","Couldn't find any camera connected. Program will now exit. Check a Deimos or Phobos camera is connected and restart the program.");
-      exit(EXIT_FAILURE);
+      QMessageBox::StandardButton reply;
+      reply = QMessageBox::question(this,
+                                    "Stereo Vision Toolkit",
+                                    "Couldn't find any camera connected. Some features will not work as expected. Are you sure you want to continue?",
+                                    QMessageBox::Yes|QMessageBox::No);
+      if (reply != QMessageBox::Yes) {
+          exit(EXIT_FAILURE);
+      }
+  } else {
+      //re-enable tabs as camera confirmed as connected
+      enableWindow();
   }
   pointCloudInit();
+}
+
+void MainWindow::disableWindow(){
+    ui->tabWidget->setDisabled(true);
+    ui->exposureSpinBox->setDisabled(true);
+    ui->autoExposeCheck->setDisabled(true);
+    ui->enableHDRCheckbox->setDisabled(true);
+    ui->matcherSelectBox->setDisabled(true);
+    ui->enableStereo->setDisabled(true);
+
+    ui->pauseButton->setDisabled(true);
+    ui->singleShotButton->setDisabled(true);
+    ui->saveButton->setDisabled(true);
+    ui->toggleVideoButton->setDisabled(true);
+    ui->actionCalibration_wizard->setDisabled(true);
+}
+
+void MainWindow::enableWindow(){
+    ui->tabWidget->setEnabled(true);
+    ui->exposureSpinBox->setEnabled(true);
+    ui->autoExposeCheck->setEnabled(true);
+    ui->enableHDRCheckbox->setEnabled(true);
+    ui->matcherSelectBox->setEnabled(true);
+    ui->enableStereo->setEnabled(true);
+
+    ui->pauseButton->setEnabled(true);
+    ui->singleShotButton->setEnabled(true);
+    ui->saveButton->setEnabled(true);
+    ui->toggleVideoButton->setEnabled(true);
+    ui->actionCalibration_wizard->setEnabled(true);
 }
 
 void MainWindow::pointCloudSaveStatus(QString msg){
@@ -192,6 +234,7 @@ void MainWindow::stereoCameraInitConnections(void) {
           SLOT(updateDisparityAsync(void)));
   connect(ui->autoExposeCheck, SIGNAL(clicked(bool)), stereo_cam, SLOT(enableAutoExpose(bool)));
   connect(ui->enableHDRCheckbox, SIGNAL(clicked(bool)), stereo_cam, SLOT(toggleHDR(bool)));
+  connect(stereo_cam, SIGNAL(disconnected()), this, SLOT(disableWindow()));
 
   /* Point cloud */
   connect(stereo_cam, SIGNAL(reprojected()), this, SLOT(updateCloud()));
@@ -330,7 +373,11 @@ void MainWindow::stereoCameraInit() {
 
 void MainWindow::autoloadCameraTriggered() {
   stereoCameraRelease();
-  stereoCameraLoad();
+  int stereo_camera_exit_code = stereoCameraLoad();
+  if (stereo_camera_exit_code == 0){
+    //re-enable tabs as camera confirmed as connected
+    enableWindow();
+  }
 }
 
 void MainWindow::videoStreamLoad(void) {

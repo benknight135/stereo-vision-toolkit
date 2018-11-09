@@ -58,6 +58,9 @@ class AbstractStereoCamera : public QObject {
     //! Indicates that the camera has finished acquiring
     void finished();
 
+    //! Indicates that the camera has disconnected
+    void disconnected();
+
     //! Indicates the current frame count
     void framecount(qint64);
 

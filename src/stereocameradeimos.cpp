@@ -316,6 +316,7 @@ void StereoCameraDeimos::disconnectCamera() {
     }
 
     connected = false;
+    emit disconnected();
 
 }
 
