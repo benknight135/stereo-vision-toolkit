@@ -238,49 +238,62 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    connect((<a class="code" href="class_listener.html">Listener</a>*) left_camera-&gt;getListener(), SIGNAL(grabbed(<span class="keywordtype">void</span>*)), <span class="keyword">this</span>, SLOT(register_left_capture()));</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    connect((<a class="code" href="class_listener.html">Listener</a>*) right_camera-&gt;getListener(), SIGNAL(grabbed(<span class="keywordtype">void</span>*)), <span class="keyword">this</span>, SLOT(register_right_capture()));</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    connect(<span class="keyword">this</span>, SIGNAL(start_capture(<span class="keywordtype">void</span>)), left_camera, SLOT(startCapture(<span class="keywordtype">void</span>)));</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    connect(<span class="keyword">this</span>, SIGNAL(start_capture(<span class="keywordtype">void</span>)), right_camera, SLOT(startCapture(<span class="keywordtype">void</span>)));</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    connect((<a class="code" href="class_listener.html">Listener</a>*) left_camera-&gt;getListener(), SIGNAL(deviceDisconnected()), <span class="keyword">this</span>, SLOT(disconnectCamera()));</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    connect((<a class="code" href="class_listener.html">Listener</a>*) right_camera-&gt;getListener(), SIGNAL(deviceDisconnected()), <span class="keyword">this</span>, SLOT(disconnectCamera()));</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    connect(<span class="keyword">this</span>, SIGNAL(stereo_grab(<span class="keywordtype">void</span>)), left_camera, SLOT(grabImage(<span class="keywordtype">void</span>)));</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    connect(<span class="keyword">this</span>, SIGNAL(stereo_grab(<span class="keywordtype">void</span>)), right_camera, SLOT(grabImage(<span class="keywordtype">void</span>)));</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    connect(<span class="keyword">this</span>, SIGNAL(start_capture(<span class="keywordtype">void</span>)), left_camera, SLOT(startCapture(<span class="keywordtype">void</span>)));</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    connect(<span class="keyword">this</span>, SIGNAL(start_capture(<span class="keywordtype">void</span>)), right_camera, SLOT(startCapture(<span class="keywordtype">void</span>)));</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    connected = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    emit start_capture();</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;}</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="keywordtype">void</span> StereoCameraPhobos::loadLeftSettings(){</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    left_camera-&gt;showProperties();</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;}</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="keywordtype">void</span> StereoCameraPhobos::loadRightSettings(){</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    right_camera-&gt;showProperties();</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;}</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;</div>
-<div class="line"><a name="l00172"></a><span class="lineno"><a class="line" href="class_stereo_camera_phobos.html#a86b1166b2ec4da6ca7263555f6871035">  172</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_stereo_camera_phobos.html#a86b1166b2ec4da6ca7263555f6871035">StereoCameraPhobos::capture</a>(){</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    frametimer.restart();</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    connect(<span class="keyword">this</span>, SIGNAL(stereo_grab(<span class="keywordtype">void</span>)), left_camera, SLOT(grabImage(<span class="keywordtype">void</span>)));</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    connect(<span class="keyword">this</span>, SIGNAL(stereo_grab(<span class="keywordtype">void</span>)), right_camera, SLOT(grabImage(<span class="keywordtype">void</span>)));</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    connect(left_camera, SIGNAL(grabError()), <span class="keyword">this</span>, SLOT(disconnectCamera()));</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    connect(right_camera, SIGNAL(grabError()), <span class="keyword">this</span>, SLOT(disconnectCamera()));</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    connected = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    emit start_capture();</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;}</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;<span class="keywordtype">void</span> StereoCameraPhobos::disconnectCamera(){</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="comment">//left_camera-&gt;disconnect();</span></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="comment">//right_camera-&gt;disconnect();</span></div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    emit <a class="code" href="class_abstract_stereo_camera.html#a3d09b66be2f4c53280d4328ff5409881">disconnected</a>();</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;}</div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    capturing = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    captured_stereo = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <span class="comment">/* Asynchronous grab */</span></div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    emit stereo_grab();</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="keywordtype">void</span> StereoCameraPhobos::loadLeftSettings(){</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    left_camera-&gt;showProperties();</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;}</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<span class="keywordtype">void</span> StereoCameraPhobos::loadRightSettings(){</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    right_camera-&gt;showProperties();</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;}</div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;}</div>
+<div class="line"><a name="l00184"></a><span class="lineno"><a class="line" href="class_stereo_camera_phobos.html#a86b1166b2ec4da6ca7263555f6871035">  184</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="class_stereo_camera_phobos.html#a86b1166b2ec4da6ca7263555f6871035">StereoCameraPhobos::capture</a>(){</div>
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;StereoCameraPhobos::~StereoCameraPhobos(){</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;   <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;}</div>
-<div class="ttc" id="class_stereo_camera_phobos_html_a86b1166b2ec4da6ca7263555f6871035"><div class="ttname"><a href="class_stereo_camera_phobos.html#a86b1166b2ec4da6ca7263555f6871035">StereoCameraPhobos::capture</a></div><div class="ttdeci">bool capture()</div><div class="ttdoc">Capture an image. </div><div class="ttdef"><b>Definition:</b> <a href="stereocameraphobos_8cpp_source.html#l00172">stereocameraphobos.cpp:172</a></div></div>
-<div class="ttc" id="class_camera_imaging_source_html"><div class="ttname"><a href="class_camera_imaging_source.html">CameraImagingSource</a></div><div class="ttdef"><b>Definition:</b> <a href="cameraimagingsource_8h_source.html#l00096">cameraimagingsource.h:96</a></div></div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    frametimer.restart();</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    capturing = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    captured_stereo = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="comment">/* Asynchronous grab */</span></div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    emit stereo_grab();</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;}</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;StereoCameraPhobos::~StereoCameraPhobos(){</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;   <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;}</div>
+<div class="ttc" id="class_stereo_camera_phobos_html_a86b1166b2ec4da6ca7263555f6871035"><div class="ttname"><a href="class_stereo_camera_phobos.html#a86b1166b2ec4da6ca7263555f6871035">StereoCameraPhobos::capture</a></div><div class="ttdeci">bool capture()</div><div class="ttdoc">Capture an image. </div><div class="ttdef"><b>Definition:</b> <a href="stereocameraphobos_8cpp_source.html#l00184">stereocameraphobos.cpp:184</a></div></div>
+<div class="ttc" id="class_camera_imaging_source_html"><div class="ttname"><a href="class_camera_imaging_source.html">CameraImagingSource</a></div><div class="ttdef"><b>Definition:</b> <a href="cameraimagingsource_8h_source.html#l00102">cameraimagingsource.h:102</a></div></div>
+<div class="ttc" id="class_abstract_stereo_camera_html_a3d09b66be2f4c53280d4328ff5409881"><div class="ttname"><a href="class_abstract_stereo_camera.html#a3d09b66be2f4c53280d4328ff5409881">AbstractStereoCamera::disconnected</a></div><div class="ttdeci">void disconnected()</div><div class="ttdoc">Indicates that the camera has disconnected. </div></div>
 <div class="ttc" id="class_listener_html"><div class="ttname"><a href="class_listener.html">Listener</a></div><div class="ttdef"><b>Definition:</b> <a href="cameraimagingsource_8h_source.html#l00018">cameraimagingsource.h:18</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 30 2018 12:08:49 for Stereo Vision Toolkit by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 23 2018 00:37:46 for Stereo Vision Toolkit by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.8
 </small></address>

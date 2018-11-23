@@ -58,14 +58,15 @@ bool StereoCameraFromVideo::capture() {
     if(image_buffer.channels() == 3)
         cv::cvtColor(image_buffer, image_buffer, CV_RGB2GRAY);
 
-    emit captured();
-
     cv::Mat(image_buffer,
             cv::Rect(0, 0, image_buffer.cols / 2, image_buffer.rows))
         .copyTo(left_raw);
     cv::Mat(image_buffer, cv::Rect(image_buffer.cols / 2, 0,
                                    image_buffer.cols / 2, image_buffer.rows))
         .copyTo(right_raw);
+
+    emit left_captured();
+    emit right_captured();
 
     frame_timer.restart();
 
