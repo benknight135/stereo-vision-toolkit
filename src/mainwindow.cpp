@@ -60,6 +60,7 @@ MainWindow::MainWindow(QWidget* parent)
       enableWindow();
   }
   pointCloudInit();
+
 }
 
 void MainWindow::disableWindow(){
@@ -588,6 +589,12 @@ void MainWindow::setupMatchers(void) {
   matcher_list.append(opencv_sgm);
   ui->matcherSelectBox->insertItem(1, "OpenCV SGM");
   ui->matcherSettingsLayout->addWidget(opencv_sgm);
+
+  MatcherWidgetJrSgm* jr_sgm =
+      new MatcherWidgetJrSgm(this, stereo_cam->getSize());
+  matcher_list.append(jr_sgm);
+  ui->matcherSelectBox->insertItem(1, "JR SGM");
+  ui->matcherSettingsLayout->addWidget(jr_sgm);
 
   ui->matcherSelectBox->setCurrentIndex(0);
 

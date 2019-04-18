@@ -29,6 +29,7 @@
 
 #include "matcherwidgetopencvblock.h"
 #include "matcherwidgetopencvsgbm.h"
+#include "matcherwidgetjrsgm.h"
 #include "stereocameradeimos.h"
 #include "stereocamerafromvideo.h"
 #include "stereocameraopencv.h"

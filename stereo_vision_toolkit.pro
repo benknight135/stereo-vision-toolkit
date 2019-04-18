@@ -47,7 +47,9 @@ SOURCES += main.cpp\
     paramfile.cpp \
     cameradisplaywidget.cpp \
     stereocameraphobos.cpp \
-    cameraimagingsource.cpp
+    cameraimagingsource.cpp \
+    matcherjrsgm.cpp \
+    matcherwidgetjrsgm.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -72,6 +74,8 @@ HEADERS  += mainwindow.h \
     cameradisplaywidget.h \
     stereocameraphobos.h \
     cameraimagingsource.h \
+    matcherjrsgm.h \
+    matcherwidgetjrsgm.h
 
 
 FORMS    += mainwindow.ui \
@@ -81,7 +85,8 @@ FORMS    += mainwindow.ui \
     matcherwidgetopencvblock.ui \
     matcherwidgetopencvsgbm.ui \
     disparityviewer.ui \
-    cameradisplaywidget.ui
+    cameradisplaywidget.ui \
+    matcherwidgetjrsgm.ui
 
 # For building in a single folder
 CONFIG(debug, debug|release) {
@@ -100,6 +105,9 @@ INCLUDEPATH += "$$_PRO_FILE_PWD_/3rd_party/PCL/include/pcl-1.8"
 INCLUDEPATH += "$$_PRO_FILE_PWD_/3rd_party/hidapi/include"
 INCLUDEPATH += "$$_PRO_FILE_PWD_/3rd_party/tis/include"
 INCLUDEPATH += "$$_PRO_FILE_PWD_/3rd_party/yaml-cpp/include"
+INCLUDEPATH += "$$_PRO_FILE_PWD_/3rd_party/jr/include"
+
+LIBS += -L"$$_PRO_FILE_PWD_/3rd_party/jr/lib/PhobosIntegration" -lPhobosIntegration
 
 CONFIG(debug, debug|release) {
     message("Debug mode")

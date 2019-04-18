@@ -8,12 +8,13 @@
 
 #include <QWidget>
 #include <abstractstereomatcher.h>
+#include <QSettings>
 
 class MatcherWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MatcherWidget(QWidget *parent = 0) : QWidget(parent) {}
+    explicit MatcherWidget(QWidget *parent = nullptr) : QWidget(parent) {}
     virtual AbstractStereoMatcher* getMatcher(void) = 0;
 
 signals:
