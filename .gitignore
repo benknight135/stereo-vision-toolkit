@@ -3,5 +3,4 @@ build/
 Doxyfile.bak
 installer/Output/
 *.tmp
-3rd_party/jr/bin
-3rd_party/jr/lib
+3rd_party/jr
