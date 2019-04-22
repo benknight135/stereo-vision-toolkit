@@ -1,3 +1,5 @@
+**Note: you are on the Phobos branch. This code will not compile unless you have access to our proprietary stereo matching library. Please switch to master for the standard (free) version of the toolkit.** 
+
 About
 ---
 
